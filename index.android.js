@@ -43,7 +43,7 @@ let QUOTE_LIST = [
   }
 ];
 
-const MARGIN = 50;
+const MARGIN = 200;
 
 class AutoText extends Component {
   constructor(props) {
@@ -64,20 +64,20 @@ class AutoText extends Component {
   }
 
   checkSize(w, h) {
-    if (h > this.props.height + MARGIN) {
-      this.setState({
-        size: this.state.size - this.state.interval,
-        interval: this.state.interval / 2
-      });
-      this.tryNewSize();
+    let newSize;
+    if (h > this.props.height) {
+      newSize = this.state.size - this.state.interval;
     } else if (h < this.props.height - MARGIN) {
-      this.setState({
-        size: this.state.size + this.state.interval,
-        interval: this.state.interval / 2
-      });
-      this.tryNewSize();
+      newSize = this.state.size + this.state.interval;
     } else if (!this.state.complete) {
       this.setState({complete: true});
+    }
+    if (newSize) {
+      this.setState({
+        size: newSize,
+        interval: this.state.interval / 2
+      });
+      this.tryNewSize();
     }
   }
 
@@ -95,6 +95,10 @@ class AutoText extends Component {
       <Text ref={component => this._text = component}
             onLayout={this._onLayout}
             style={{
+              fontFamily: 'DroidSerif',
+              textAlign: 'center',
+              color: '#111111',
+              margin: 20,
               backgroundColor: 'transparent',
               fontSize: this.state.size,
               color: this.state.complete ? 'black' : 'transparent'
@@ -154,36 +158,6 @@ export default class QuoteBoard extends Component {
   }
 }
 
-var {height, width} = Dimensions.get('window');
-var maxDimension = Math.max(height, width);
-var pixelRatio = PixelRatio.get();
-
-
-function float2int (value) {
-  return value | 0;
-}
-
-function getCorrectFontSizeForScreen(
-    pixelRatio, screenWidth, screenHeight, currentFont){
-  let factor = (
-      ((screenWidth * pixelRatio) / 320) +
-      ((screenHeight * pixelRatio) / 640)
-    ) / 2.0;
-  let maxFontDifferFactor = 5; //the maximum pixels of font size we can go up or down
-  console.log("The factor is: "+factor);
-  if(factor<=1){
-    return currentFont-float2int(maxFontDifferFactor*0.3);
-  }else if((factor>=1) && (factor<=1.6)){
-    return currentFont-float2int(maxFontDifferFactor*0.1);
-  }else if((factor>=1.6) && (factor<=2)){
-    return currentFont;
-  }else if((factor>=2) && (factor<=3)){
-    return currentFont+float2int(maxFontDifferFactor*0.65);
-  }else if (factor>=3){
-    return currentFont+float2int(maxFontDifferFactor);
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -192,7 +166,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'DroidSerif',
-    fontSize: getCorrectFontSizeForScreen(pixelRatio, width, height, 40),
+    fontSize: 90,
     textAlign: 'center',
     margin: 10,
     color: '#111111',
