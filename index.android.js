@@ -43,8 +43,6 @@ let QUOTE_LIST = [
   }
 ];
 
-const MARGIN = 200;
-
 class AutoText extends Component {
   constructor(props) {
     super(props);
@@ -67,7 +65,7 @@ class AutoText extends Component {
     let newSize;
     if (h > this.props.height) {
       newSize = this.state.size - this.state.interval;
-    } else if (h < this.props.height - MARGIN) {
+    } else if (h < this.props.height * .8) {
       newSize = this.state.size + this.state.interval;
     } else if (!this.state.complete) {
       this.setState({complete: true});
